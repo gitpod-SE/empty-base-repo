@@ -1,12 +1,16 @@
-FROM python:3.11-slim
+FROM python:3.9-slim
 
 WORKDIR /app
 
+# Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the rest of the application
 COPY . .
 
-EXPOSE 8000
+# Make the scripts executable
+RUN chmod +x compound_analyzer.py example.py
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Default command
+CMD ["python", "example.py"]
